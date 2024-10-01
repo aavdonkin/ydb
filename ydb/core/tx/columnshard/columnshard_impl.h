@@ -489,8 +489,6 @@ private:
     NDataShard::TSysLocks SysLocks;
     static TDuration GetMaxReadStaleness();
 
-    THashSet<ui64> RemovedSchemaVersions;
-
     void TryRegisterMediatorTimeCast();
     void UnregisterMediatorTimeCast();
     void TryAbortWrites(NIceDb::TNiceDb& db, NOlap::TDbWrapper& dbTable, THashSet<TInsertWriteId>&& writesToAbort);
@@ -622,8 +620,8 @@ public:
         return NKikimrServices::TActivity::TX_COLUMNSHARD_ACTOR;
     }
 
-    void ExecuteSchemaVersionsCleanup(NIceDb::TNiceDb& db);
-    void CompleteSchemaVersionsCleanup();
+    void ExecuteSchemaVersionsCleanup(NIceDb::TNiceDb& db, THashSet<ui64>& versionsToRemove);
+    void CompleteSchemaVersionsCleanup(const THashSet<ui64>& versionsToRemove);
 
     TColumnShard(TTabletStorageInfo* info, const TActorId& tablet);
 };
