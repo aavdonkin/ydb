@@ -181,12 +181,25 @@ public:
         VersionedIndex.AddShardingInfo(shardingInfo);
     }
 
-    TVersionCounts& MutableVersionCounts() {
-        return VersionCounts;
+    TVersionCounts* MutableVersionCounts() override {
+        return &VersionCounts;
     }
 
     void RemoveSchemaVersion(ui64 version) {
         VersionedIndex.RemoveVersion(version);
+    }
+
+    ui64 LastSchemaVersion () const override {
+        return VersionedIndex.GetLastSchemaVersion();
+    }
+
+    bool IsEmpty() const override {
+        return VersionCounts.IsEmpty(LastSchemaVersion());
+    }
+
+    void EraseSchemaVersion(ui64 version) override {
+        RemoveSchemaVersion(version);
+        VersionCounts.VersionsToErase.erase(version);
     }
 
 private:

@@ -155,12 +155,12 @@ TGranuleMeta::TGranuleMeta(const ui64 pathId, const TGranulesStorage& owner, con
 
 std::shared_ptr<TPortionInfo> TGranuleMeta::UpsertPortionOnLoad(TPortionInfo&& portion, TVersionCounts& versionCounts) {
     auto portionId = portion.GetPortionId();
-    auto emplaceInfo = Portions.emplace(portionId, std::make_shared<TPortionInfo>(std::move(portion)));
-    AFL_VERIFY(emplaceInfo.second);
     auto schemaVersionOpt = portion.GetSchemaVersionOptional();
     if (schemaVersionOpt.has_value()) {
         versionCounts.VersionAddRef(*schemaVersionOpt);
     }
+    auto emplaceInfo = Portions.emplace(portionId, std::make_shared<TPortionInfo>(std::move(portion)));
+    AFL_VERIFY(emplaceInfo.second);
     return emplaceInfo.first->second;
 }
 
