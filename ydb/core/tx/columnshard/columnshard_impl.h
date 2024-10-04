@@ -94,6 +94,7 @@ class TEvWriteCommitSecondaryTransactionOperator;
 class TTxFinishAsyncTransaction;
 class TTxInsertTableCleanup;
 class TTxRemoveSharedBlobs;
+class TTxSchemaVersionsCleanup;
 class TOperationsManager;
 class TWaitEraseTablesTxSubscriber;
 
@@ -161,6 +162,7 @@ class TColumnShard
     friend class TTxMonitoring;
     friend class TTxRemoveSharedBlobs;
     friend class TTxFinishAsyncTransaction;
+    friend class TTxSchemaVersionsCleanup;
     friend class TWaitEraseTablesTxSubscriber;
 
     friend class NOlap::TCleanupPortionsColumnEngineChanges;
@@ -621,7 +623,7 @@ public:
     }
 
     void ExecuteSchemaVersionsCleanup(NIceDb::TNiceDb& db, THashSet<ui64>& versionsToRemove);
-    void CompleteSchemaVersionsCleanup(const THashSet<ui64>& versionsToRemove);
+    void CompleteSchemaVersionsCleanup(THashSet<ui64>& versionsToRemove);
 
     TColumnShard(TTabletStorageInfo* info, const TActorId& tablet);
 };
