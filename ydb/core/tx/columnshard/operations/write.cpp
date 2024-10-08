@@ -112,7 +112,7 @@ void TWriteOperation::AbortOnExecute(TColumnShard& owner, NTabletFlatExecutor::T
 
     THashSet<TInsertWriteId> writeIds;
     writeIds.insert(InsertWriteIds.begin(), InsertWriteIds.end());
-    owner.InsertTable->Abort(dbTable, writeIds, owner.TablesManager.MutablePrimaryIndex().MutableVersionCounts());
+    owner.InsertTable->Abort(dbTable, writeIds);
 }
 
 void TWriteOperation::AbortOnComplete(TColumnShard& /*owner*/) const {
