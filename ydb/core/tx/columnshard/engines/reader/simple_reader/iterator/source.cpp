@@ -27,7 +27,8 @@ void IDataSource::InitFetchingPlan(const std::shared_ptr<TFetchingScript>& fetch
 
 void IDataSource::StartProcessing(const std::shared_ptr<IDataSource>& sourcePtr) {
     AFL_VERIFY(!ProcessingStarted);
-    InitStageData(std::make_unique<TFetchedData>(true, sourcePtr->GetRecordsCount()));
+    InitStageData(std::make_unique<TFetchedData>(
+        GetContext()->GetReadMetadata()->GetProgram().GetChainVerified()->HasAggregations(), sourcePtr->GetRecordsCount()));
     AFL_VERIFY(FetchingPlan);
     ProcessingStarted = true;
     SourceGroupGuard = NGroupedMemoryManager::TScanMemoryLimiterOperator::BuildGroupGuard(
@@ -138,7 +139,7 @@ bool TPortionDataSource::DoStartFetchingColumns(
 }
 
 std::shared_ptr<NIndexes::TSkipIndex> TPortionDataSource::SelectOptimalIndex(
-    const std::vector<std::shared_ptr<NIndexes::TSkipIndex>>& indexes, const NArrow::NSSA::EIndexCheckOperation /*op*/) const {
+    const std::vector<std::shared_ptr<NIndexes::TSkipIndex>>& indexes, const NArrow::NSSA::TIndexCheckOperation& /*op*/) const {
     if (indexes.size() == 0) {
         return nullptr;
     }
